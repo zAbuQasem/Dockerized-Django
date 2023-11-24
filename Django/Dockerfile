@@ -11,11 +11,17 @@ COPY requirements.txt .
 # Create a low privileged user
 RUN useradd -ms /bin/bash runner
 
+# Grant new user permissions to /app 
+RUN chown -R runner:runner /app
+
 # Swtich to the newly create user
 USER runner
 
 # Install django and it's dependencies
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Run migrations
+RUN python /app/manage.py migrate
 
 # Run the application server
 ENTRYPOINT ["python", "manage.py"]
