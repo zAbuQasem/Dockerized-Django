@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "health_check",
     "health_check.db",
+    "django_probes",
 ]
 
 MIDDLEWARE = [

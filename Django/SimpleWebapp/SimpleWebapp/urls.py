@@ -18,5 +18,4 @@ from django.urls import path,include
 
 urlpatterns = [
     path('', include("health_check.urls")),
-    path('healthz', include("health_check.urls")),
 ]
