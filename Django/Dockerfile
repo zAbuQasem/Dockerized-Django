@@ -15,7 +15,7 @@ RUN useradd -ms /bin/bash runner
 RUN chown -R runner:runner /app
 
 # Swtich to the newly create user
-USER runner
+#USER runner
 
 # Install django and it's dependencies
 RUN pip install --no-cache-dir -r requirements.txt
