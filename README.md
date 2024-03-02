@@ -22,7 +22,5 @@ docker build -t dockerized-django .
 docker run -d -p 8000:8000 dockerized-django
 ```
 
-Application should run with the default configurations.
-
 ### Useful Endpoints
 1. `/healthz`: For health checks.
