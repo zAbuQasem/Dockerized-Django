@@ -17,5 +17,6 @@ from django.contrib import admin
 from django.urls import path,include
 
 urlpatterns = [
-    path('', include("health_check.urls")),
+    path("", include("pages.urls")),
+    path('healthz', include("health_check.urls")),
 ]

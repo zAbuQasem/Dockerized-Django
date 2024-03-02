@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from os import getenv, popen
+from decouple import config
+
+APP_VERSION = config("APP_VERSION",'APP_VERSION is not set. ',cast=str)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,17 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = getenv('SECRET_KEY','django-insecure-^c&t&=j!9n6z+fce325ghcm&@2lzkxx1hfnid8pc%e^5(s6+^h')
+SECRET_KEY = config('SECRET_KEY','django-insecure-^c&t&=j!9n6z+fce325ghcm&@2lzkxx1hfnid8pc%e^5(s6+^h442',cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if getenv('ENV') == "test":
+if config('ENV','',cast=str) == "test":
     DEBUG = True
 else:
     DEBUG = False
 
 
-ALLOWED_HOSTS = [getenv('ALLOWED_HOSTS','*')]
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS','*',cast=str)]
 
 
 # Application definition
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     "health_check",
     "health_check.db",
     "django_probes",
+    "pages.apps.PagesConfig",
 ]
 
 MIDDLEWARE = [
@@ -71,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'SimpleWebapp.context_processors.export_vars',
             ],
         },
     },
@@ -82,15 +86,15 @@ WSGI_APPLICATION = 'SimpleWebapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if getenv('MYSQL_DB'):
+if config('MYSQL_DB','',cast=str):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': getenv('DB_NAME', ''),
-            'USER': getenv('DB_USER', ''),
-            'PASSWORD': getenv('DB_PASS', ''),
-            'HOST': getenv('DB_HOST', 'localhost'),
-            'PORT': getenv('DB_PORT', '3306'),
+            'NAME': config('DB_NAME', '',cast=str),
+            'USER': config('DB_USER', '',cast=str),
+            'PASSWORD': config('DB_PASS', '',cast=str),
+            'HOST': config('DB_HOST', 'localhost',cast=str),
+            'PORT': config('DB_PORT', '3306',cast=int),
         }
     }
 else:

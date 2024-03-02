@@ -1,5 +1,7 @@
 # Use base image python3.10
-from python:3.10@sha256:85de714b205693782cc48408bc48815343529987aae396b1adbbe05be5557cd7
+FROM python:3.10@sha256:85de714b205693782cc48408bc48815343529987aae396b1adbbe05be5557cd7
+
+ENV APP_VERSION="1.0.0"
 
 # Create /app directory and make it our current working directory (PWD:/app)
 WORKDIR /app

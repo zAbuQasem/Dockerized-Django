@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333333;
+            margin-top: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999999;
+        }
+        .footer a {
+            color: #999999;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Our Site!</h1>
+        <table>
+            <tr>
+                <th>Hostname</th>
+                <td>{{ hostname }}</td>
+            </tr>
+            <tr>
+                <th>Server IP</th>
+                <td>{{ request.META.REMOTE_ADDR }}</td>
+            </tr>
+            <tr>
+                <th>Server Software</th>
+                <td>{{ request.META.SERVER_SOFTWARE }}</td>
+            </tr>
+            <tr>
+                <th>Python Version</th>
+                <td>{{ request.META.PYTHON_VERSION }}</td>
+            </tr>
+            <tr>
+                <th>App Version</th>
+                <td>{{ APP_VERSION }}</td>
+            </tr>
+        </table>
+        <div class="footer">
+            &copy; 2024 zAbuQasem | <a href="https://github.com/zAbuQasem">View My Repository</a>
+        </div>
+    </div>
+</body>
+</html>
