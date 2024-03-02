@@ -11,7 +11,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
+from decouple import AutoConfig
+
+config=AutoConfig(search_path='/app')
 
 APP_VERSION = config("APP_VERSION",'APP_VERSION is not set. ',cast=str)
 
@@ -27,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY','django-insecure-^c&t&=j!9n6z+fce325ghcm&@2lzkx
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if config('ENV','',cast=str) == "test":
+if config('DEBUG',False,cast=bool):
     DEBUG = True
 else:
     DEBUG = False
@@ -86,7 +88,7 @@ WSGI_APPLICATION = 'SimpleWebapp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if config('MYSQL_DB','',cast=str):
+if config('MYSQL',False,cast=bool):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
