@@ -22,7 +22,11 @@ docker build -t dockerized-django .
 ```
 4. Run
 ```sh
+# Without env
 docker run -d -p 8000:8000 dockerized-django
+
+# With env
+docker run --env-file .env -d -p 8000:8000 dockerized-django
 ```
 
 ### Useful Endpoints

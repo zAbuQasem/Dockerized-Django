@@ -19,9 +19,5 @@ USER runner
 # Install django and it's dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Run migrations
-RUN python /app/SimpleWebapp/manage.py migrate
-
 # Run the application server
-ENTRYPOINT ["python", "/app/SimpleWebapp/manage.py"]
-CMD ["runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["bash","/app/entrypoint.sh"]
