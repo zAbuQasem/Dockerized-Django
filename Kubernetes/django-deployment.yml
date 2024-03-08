@@ -1,0 +1,125 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  mysimpleapp
+  namespace: application
+  labels:
+    app:  mysimpleapp
+spec:
+  selector:
+    matchLabels:
+      app: mysimpleapp
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  mysimpleapp
+    spec:
+      initContainers:
+        - name: wait-for-database
+          image: zeyadabuqasem/mysimpleapp:django
+          imagePullPolicy: Always
+          env:
+          - name: MYSQL_DB
+            value: "True"
+          - name: DB_HOST
+            value: mysql-svc
+          envFrom:
+          - secretRef:
+              name: db-secrets
+          command: ['python', '/app/SimpleWebapp/manage.py', 'wait_for_database']
+
+        - name: migrate
+          image: zeyadabuqasem/mysimpleapp:django
+          imagePullPolicy: Always
+          env:
+          - name: MYSQL_DB
+            value: "True"
+          - name: DB_HOST
+            value: mysql-svc
+          envFrom:
+          - secretRef:
+              name: db-secrets
+          command: ['python', '/app/SimpleWebapp/manage.py', 'migrate']
+      containers:
+      - name:  mysimpleapp
+        image:  zeyadabuqasem/mysimpleapp:django
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        env:
+        - name: MYSQL
+          value: "True"
+        - name: DB_HOST
+          value: mysql-svc
+        - name: APP_VERSION
+          value: v1.0.0
+        envFrom:
+        - secretRef:
+            name: db-secrets
+        ports:
+        - containerPort: 8000
+          name:  mysimpleapp
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysimpleapp-svc
+  namespace: application
+spec:
+  selector:
+    app: mysimpleapp
+  type: ClusterIP
+  ports:
+  - name: mysimpleapp-svc
+    protocol: TCP
+    port: 8000
+    targetPort: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mysimpleapp
+  namespace: application
+spec:
+  rules:
+  - host: mysimpleapp.xyz
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mysimpleapp-svc 
+            port:
+              number: 8000
+---

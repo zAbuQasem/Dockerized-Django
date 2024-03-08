@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  mysql
+  namespace: application
+  labels:
+    app:  mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  mysql
+    spec:
+      containers:
+      - name:  mysql
+        image: mysql@sha256:d43bab9d9bd18d3770f6156bdb7c5364cac797c6a906e67cf548b0a439ff1d2d
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 500m
+            memory: 500Mi
+          limits:
+            cpu: 500m
+            memory: 500Mi
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          initialDelaySeconds: 20
+          timeoutSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 20
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_PASS
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: db-secrets
+              key: DB_NAME
+        ports:
+        - containerPort: 3306
+          name:  mysql
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-svc
+  namespace: application 
+spec:
+  selector:
+    app: mysql
+  type: ClusterIP
+  ports:
+  - name: mysql-svc
+    protocol: TCP
+    port: 3306
+    targetPort: 3306
+---
+
