@@ -2,5 +2,7 @@
 venv
 .git
 Dockerfile
-env.example
+.env.example
 README.md
+cosign.pub
+Kubernetes
