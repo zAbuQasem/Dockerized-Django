@@ -16,5 +16,6 @@ echo "$IP mysimpleapp.xyz" | sudo tee -a /etc/hosts
 ```
 4. Deploy application
 ```sh
+kubectl create ns application
 kubectl apply -f .
 ```
